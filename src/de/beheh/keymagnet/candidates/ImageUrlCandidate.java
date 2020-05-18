@@ -19,7 +19,7 @@ public class ImageUrlCandidate extends Candidate {
 
 	@Override
 	public void run() {
-		Pattern pattern = Pattern.compile("http://i.imgur.com/[A-z0-9].*\\..{3}");
+		Pattern pattern = Pattern.compile("https?://i\\.imgur\\.com/[A-z0-9]*\\.[A-z]{3}");
 		Matcher matcher = pattern.matcher(riddle.toString());
 		while(matcher.find()) {
 			String url = matcher.group();
@@ -29,11 +29,11 @@ public class ImageUrlCandidate extends Candidate {
 			riddleMaster.getQueue().add(new Riddle(url));
 		}
 
-		Pattern desktop = Pattern.compile("http://imgur.com/([A-z0-9].*)");
+		Pattern desktop = Pattern.compile("https?://imgur\\.com/([A-z0-9]*)");
 		Matcher desktopmatcher = desktop.matcher(riddle.toString());
 		while(desktopmatcher.find()) {
 			String url = desktopmatcher.group(1);
-			riddleMaster.getQueue().add(new Riddle("http://i.imgur.com/" + url + ".jpg"));
+			riddleMaster.getQueue().add(new Riddle("https://i.imgur.com/" + url + "\\.jpg"));
 		}
 		this.complete();
 	}

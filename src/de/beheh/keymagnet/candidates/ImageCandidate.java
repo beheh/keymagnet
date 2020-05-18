@@ -24,7 +24,7 @@ public class ImageCandidate extends Candidate {
 
 	@Override
 	public void run() {
-		if(!riddle.toString().matches("^http://.*\\.((jpg)|(png))$")) {
+		if(!riddle.toString().matches("^https?://.*\\.((jpg)|(png))$")) {
 			this.complete();
 			return;
 		}
@@ -49,13 +49,14 @@ public class ImageCandidate extends Candidate {
 			outputStream.close();
 
 			// set up OCR enginge
-			Tesseract instance = Tesseract.getInstance();  // via JNA Interface Mapping
+			Tesseract instance = new Tesseract();  // via JNA Interface Mapping
 			instance.setLanguage("eng");
 			instance.setOcrEngineMode(2); // see http://www.emgu.com/wiki/files/2.3.0/document/html/a4eee77d-90ad-4f30-6783-bc3ef71f8d49.htm
-			instance.setTessVariable("tessedit_char_whitelist", "0123456789"); // only allow digits
+			instance.setTessVariable("tessedit_char_whitelist", "023456789ABCDEFGHIJKLMNPQRSTUVXYZ-"); // only allow digits
 
 			try {
 				String result = instance.doOCR(imageFile);
+				result = result.replaceAll("[)\\]]", "J");
 				riddleMaster.getQueue().add(new Riddle(result));
 			} catch(TesseractException ex) {
 				ex.printStackTrace(System.err);
