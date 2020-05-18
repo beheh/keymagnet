@@ -35,6 +35,17 @@ public class ImageUrlCandidate extends Candidate {
 			String url = desktopmatcher.group(1);
 			riddleMaster.getQueue().add(new Riddle("https://i.imgur.com/" + url + "\\.jpg"));
 		}
+
+		Pattern reddit = Pattern.compile("https?://i.redd.it/[A-z0-9]*\\.[A-z]{3}");
+		Matcher redditmatcher = reddit.matcher(riddle.toString());
+		while(redditmatcher.find()) {
+			String url = redditmatcher.group();
+			if(url.equals(riddle.toString())) {
+				continue;
+			}
+			riddleMaster.getQueue().add(new Riddle(url));
+		}
+
 		this.complete();
 	}
 }
